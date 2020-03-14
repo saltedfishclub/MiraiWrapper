@@ -34,7 +34,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew shadowjar
-    - name: Rename Artifact:
+    - name: Rename Artifact
       run: mv ./build/libs/*.jar ./build/libs/MiraiWrapper.jar
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
