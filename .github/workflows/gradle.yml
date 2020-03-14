@@ -26,7 +26,7 @@ jobs:
       run: |
         git clone https://github.com/saltedfishclub/PolarCore
         cd PolarCore
-        pwd
+        ls
         chmod +x ./gradlew
         ./gradlew shadowjar
         mkdir ../libs
