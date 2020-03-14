@@ -22,14 +22,8 @@ jobs:
         java-version: 1.8
     - name: git Actions
       uses: srt32/git-actions@v0.0.3
-    - name: Clone PolarCore
-      run: git clone https://github.com/saltedfishclub/PolarCore
-    - name: Grant execute permission for gradlew (PCore)
-      run: chmod +x PolarCore/gradlew
     - name: Build PolarCore
-      run: cd PolarCore && ./gradlew shadowjar
-    - name: Move PCore
-      run: cd .. && mv PolarCore/build/libs/*.jar libs
+      run: git clone https://github.com/saltedfishclub/PolarCore && chmod +x PolarCore/gradlew && cd PolarCore && chmod +x ./gradlew && ./gradlew shadowjar && mv ./build/libs/*.jar ../libs
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
