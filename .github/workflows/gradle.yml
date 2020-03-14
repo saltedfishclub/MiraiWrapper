@@ -23,7 +23,7 @@ jobs:
     - name: git Actions
       uses: srt32/git-actions@v0.0.3
     - name: Build PolarCore
-      run: git clone https://github.com/saltedfishclub/PolarCore && chmod +x PolarCore/gradlew && cd PolarCore && chmod +x ./gradlew && ./gradlew shadowjar && mv ./build/libs/*.jar ../libs
+      run: sh buildPolarCore.sh
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
