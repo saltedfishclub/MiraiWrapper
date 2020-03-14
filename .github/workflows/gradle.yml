@@ -27,8 +27,7 @@ jobs:
     - name: Grant execute permission for gradlew (PCore)
       run: chmod +x PolarCore/gradlew
     - name: Build PolarCore
-      run: ./gradlew shadowjar
-      working-directory: PolarCore
+      run: ./PolarCore/gradlew shadowjar
     - name: Move PCore
       run: mv PolarCore/build/libs/*.jar libs
     - name: Grant execute permission for gradlew
