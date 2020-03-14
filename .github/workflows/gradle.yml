@@ -22,15 +22,17 @@ jobs:
         java-version: 1.8
     - name: git Actions
       uses: srt32/git-actions@v0.0.3
-    - name: Build PolarCore
-      run: |
-        git clone https://github.com/saltedfishclub/PolarCore
-        cd PolarCore
-        ls
-        chmod +x ./gradlew
-        ./gradlew shadowjar
-        mkdir ../libs
-        mv ./build/libs/*.jar ../libs
+    - name: Download GitHub Release
+      uses: Legion2/download-release-action@v2.1.0
+      with:
+        # The repository from where to download the files.Given as <user>/<repository>
+        repository: saltedfishclub/PolarCore
+        # The version tag of the release
+        tag: "059eda0"
+        # The file which should be downloaded.If not specified download the source code. 
+        # download directory
+        file: "Core-1.0-SNAPSHOT-all.jar"
+        path: ./libs
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
