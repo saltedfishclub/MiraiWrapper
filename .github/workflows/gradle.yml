@@ -23,8 +23,9 @@ jobs:
     - name: git Actions
       uses: srt32/git-actions@v0.0.3
     - name: Download PolarCore Releases.
-      uses: dsaltares/fetch-gh-release-asset@0.0.3
+      uses: fabriciobastian/download-release-asset-action@v1.0.4
       with:
+        version: latest
         repository: saltedfishclub/PolarCore
         file: "Core-1.0-SNAPSHOT-all.jar"
     - name: Move PolarCore..
