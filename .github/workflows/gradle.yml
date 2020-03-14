@@ -20,14 +20,23 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: git Actions
+      uses: srt32/git-actions@v0.0.3
+    - name: Clone PolarCore
+      run: git clone https://github.com/saltedfishclub/PolarCore
+    - name: Grant execute permission for gradlew (PCore)
+      run: chmod +x PolarCore/gradlew
+    - name: Build PolarCore
+      run: ./gradlew shadowjar
+      working-directory: PolarCore
+    - name: Move PCore
+      run: mv PolarCore/build/libs/*.jar libs
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew jar
+      run: ./gradlew shadowjar
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        # Artifact name
         name: MiraiWrapper-1.0-SNAPSHOT-all.jar
-        # Directory containing files to upload
         path: build/libs
