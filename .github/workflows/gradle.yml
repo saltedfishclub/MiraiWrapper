@@ -29,7 +29,9 @@ jobs:
         repository: saltedfishclub/PolarCore
         file: "Core-1.0-SNAPSHOT-all.jar"
     - name: Move PolarCore..
-      run: mv ./Core*.jar ./libs
+      run: |
+        mv ./Core*.jar ./libs
+        ls ./libs
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
