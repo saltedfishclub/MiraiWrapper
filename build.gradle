@@ -28,6 +28,6 @@ dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.4.1'
-    implementation fileTree(dir: "../Core/build/libs",includes: ["*.jar"])
+    implementation fileTree(dir: "libs",includes: ["*.jar"])
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
