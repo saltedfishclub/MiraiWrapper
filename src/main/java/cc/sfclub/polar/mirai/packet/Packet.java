@@ -17,9 +17,12 @@ public abstract class Packet {
             Response response = Main.getHttpClient().newCall(build()).execute();
             if(!response.isSuccessful()){
                 Core.getLogger().error("(Server ERROR)Failed to send packet: {} ,Response: {}",name(),response.code());
+                response.close();
                 return null;
             }
-            return response.body().string();
+            String ret=response.body().string();
+            response.close();
+            return ret;
         }catch(IOException e){
             if(Core.getConf().debug){
                 e.printStackTrace();

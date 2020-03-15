@@ -28,6 +28,7 @@ public class Main extends JavaPlugin{
     private static Config conf;
     @Getter
     private static String Session;
+
     @Override
     public void onEnable() {
         Core.addBot(bot);
@@ -67,7 +68,7 @@ public class Main extends JavaPlugin{
     public static boolean load(String authkey){
         if(Session!=null){
             new Release(getSession()).send();
-            httpClient.dispatcher().executorService().shutdown();
+            httpClient.dispatcher().executorService().shutdownNow();
         }
         String session = new Authorize(authkey).send();
         if(session==null){
@@ -79,7 +80,7 @@ public class Main extends JavaPlugin{
             Core.getLogger().error(t.name());
             return false;
         }
-        //new ModConfig(session).send(); //Modify the server config for websocket support
+        new ModConfig(session).send(); //Modify the server config for websocket support
         Session=session;
         connect();
         return true;
