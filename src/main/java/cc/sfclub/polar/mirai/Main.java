@@ -28,7 +28,7 @@ public class Main extends JavaPlugin{
     private static Config conf;
     @Getter
     private static String Session;
-
+    private static WSSListener listener=new WSSListener();
     @Override
     public void onEnable() {
         Core.addBot(bot);
@@ -63,12 +63,12 @@ public class Main extends JavaPlugin{
     @Override
     public void onDisable(){
         new Release(getSession()).send();
-        httpClient.dispatcher().executorService().shutdown();
+        httpClient.dispatcher().cancelAll();
     }
     public static boolean load(String authkey){
         if(Session!=null){
             new Release(getSession()).send();
-            httpClient.dispatcher().executorService().shutdownNow();
+            httpClient.dispatcher().cancelAll();
         }
         String session = new Authorize(authkey).send();
         if(session==null){
@@ -86,7 +86,6 @@ public class Main extends JavaPlugin{
         return true;
     }
     private static void connect() {
-        WSSListener listener = new WSSListener();
         Request request = new Request.Builder()
                 .url(conf.getAddress().replaceAll("http","ws").concat("message?sessionKey=").concat(getSession()))
                 .addHeader("Sec-Websocket-Key", UUID.randomUUID().toString())

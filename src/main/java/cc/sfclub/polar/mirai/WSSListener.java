@@ -24,9 +24,7 @@ public class WSSListener extends WebSocketListener {
 
     @Override
     public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-        t.printStackTrace();
-        Core.getLogger().error("[QQ] Failed to establish wsconnection.Exception:{}", t.getMessage());
-
+        Core.getLogger().error("[QQ] Failed to establish connection.Exception:{}", t.getMessage());
     }
 
     @Override
