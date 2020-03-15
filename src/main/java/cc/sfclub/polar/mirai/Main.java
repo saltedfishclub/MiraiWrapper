@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.WebSocket;
 import org.mve.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -28,7 +29,7 @@ public class Main extends JavaPlugin{
     private static Config conf;
     @Getter
     private static String Session;
-    private static WSSListener listener=new WSSListener();
+    private static WebSocket ws;
     @Override
     public void onEnable() {
         Core.addBot(bot);
@@ -63,12 +64,13 @@ public class Main extends JavaPlugin{
     @Override
     public void onDisable(){
         new Release(getSession()).send();
-        httpClient.dispatcher().cancelAll();
+        if(ws!=null){
+            ws.close(1000,"onDisable");
+        }
     }
     public static boolean load(String authkey){
         if(Session!=null){
             new Release(getSession()).send();
-            httpClient.dispatcher().cancelAll();
         }
         String session = new Authorize(authkey).send();
         if(session==null){
@@ -82,16 +84,20 @@ public class Main extends JavaPlugin{
         }
         new ModConfig(session).send(); //Modify the server config for websocket support
         Session=session;
+        if(ws!=null){
+            ws.close(1000,"onDisable");
+        }
         connect();
         return true;
     }
     private static void connect() {
+
         Request request = new Request.Builder()
                 .url(conf.getAddress().replaceAll("http","ws").concat("message?sessionKey=").concat(getSession()))
                 .addHeader("Sec-Websocket-Key", UUID.randomUUID().toString())
                 .build();
         Core.getLogger().info("[QQ] Connecting to {}",conf.getAddress().replaceAll("http","ws"));
-        httpClient.newWebSocket(request, listener);
+        ws=httpClient.newWebSocket(request, new WSSListener());
 
     }
     public static boolean loadConfig(){

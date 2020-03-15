@@ -19,7 +19,9 @@ public class WSSListener extends WebSocketListener {
     }
     @Override
     public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-        Core.getLogger().info("[QQ] WSConnection Closing!! Code:{},Reason:{}", code, reason);
+        if(code!=1000){
+            Core.getLogger().info("[QQ] WSConnection Closing!! Code:{},Reason:{}", code, reason);
+        }
     }
 
     @Override
