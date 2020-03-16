@@ -32,7 +32,9 @@ jobs:
         path: libs
         file: Core-1.1-SNAPSHOT-all.jar
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: |
+      chmod +x gradlew
+      ls libs
     - name: Build with Gradle
       run: ./gradlew shadowjar
     - name: Rename Artifact
