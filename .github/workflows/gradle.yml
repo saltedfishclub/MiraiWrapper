@@ -31,10 +31,10 @@ jobs:
         tag: 'v1.1'
         path: libs
         file: Core-1.1-SNAPSHOT-all.jar
+    - name: Check
+      run: ls libs
     - name: Grant execute permission for gradlew
-      run: |
-      chmod +x gradlew
-      ls libs
+      run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew shadowjar
     - name: Rename Artifact
