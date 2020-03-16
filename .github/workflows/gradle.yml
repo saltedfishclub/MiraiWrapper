@@ -23,11 +23,12 @@ jobs:
     - name: git Actions
       uses: srt32/git-actions@v0.0.3
     - name: Download PolarCore Releases.
-      uses: carlosperate/download-file-action@v1.0.0
+      uses: Legion2/download-release-action@v2.1.0
       with:
-        file-url: https://github.com/saltedfishclub/PolarCore/releases/download/v1.1/Core-1.1-SNAPSHOT-all.jar
-        name: Core-1.1-SNAPSHOT-all.jar
-        location: libs
+        repository: saltedfishclub/PolarCore
+        tag: 'v1.1'
+        path: libs
+        file: Core-1.1-SNAPSHOT-all.jar
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
