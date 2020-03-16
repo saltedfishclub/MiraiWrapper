@@ -60,9 +60,11 @@ public class Main extends JavaPlugin{
     }
     @Override
     public void onDisable(){
-        new Release(getSession()).send();
-        if(ws!=null){
-            ws.close(1000,"onDisable");
+        if (Session != null) {
+            new Release(getSession()).send();
+        }
+        if (ws != null) {
+            ws.close(1000, "onDisable");
         }
     }
     public static boolean load(String authkey){
