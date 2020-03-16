@@ -32,11 +32,8 @@ public class Main extends JavaPlugin{
     private static WebSocket ws;
     @Override
     public void onEnable() {
-        Core.addBot(bot);
-        if(this.getDataFolder().exists()){
-            this.getDataFolder().mkdir();
-        }
-        config=new File(this.getDataFolder().getAbsolutePath()+"/mirai.json");
+        Core.getInstance().addBot(bot);
+        config = new File(this.getDataFolder().getAbsolutePath() + "/mirai.json");
         if(!config.exists()){
             Config a=new Config();
             try {
@@ -58,7 +55,7 @@ public class Main extends JavaPlugin{
             return;
         }
         if(load(conf.authKey)){
-            Core.getCommandManager().register(new Mirai());
+            Core.getInstance().getCommandManager().register(new Mirai());
         }
     }
     @Override

@@ -1,6 +1,5 @@
 package cc.sfclub.polar.mirai.packet;
 
-import cc.sfclub.polar.Core;
 import cc.sfclub.polar.mirai.Main;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -25,7 +24,7 @@ public class Authorize extends Packet{
     @Override
     public String buildRequestBody() {
         Bean b = new Bean();
-        b.authKey=Main.getConf().authKey;
+        b.authKey = AuthKey;
         return Main.getGson().toJson(b);
     }
     @Override

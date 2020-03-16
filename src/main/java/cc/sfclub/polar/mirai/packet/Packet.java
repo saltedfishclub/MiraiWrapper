@@ -6,7 +6,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public abstract class Packet {
     public abstract Request build();

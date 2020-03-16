@@ -1,18 +1,16 @@
 package cc.sfclub.polar.mirai;
 
-import cc.sfclub.polar.Core;
 import cc.sfclub.polar.events.messages.TextMessage;
 import cc.sfclub.polar.mirai.packet.message.MessageChain;
 import cc.sfclub.polar.mirai.packet.message.MessageType;
 import cc.sfclub.polar.mirai.packet.message.client.CGroupMessage;
 import cc.sfclub.polar.mirai.packet.sendGroupMsg;
+import cc.sfclub.polar.utils.CatCode;
 import org.nutz.repo.Base64;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-public class Bot implements cc.sfclub.polar.wrapper.Bot {
+public class Bot extends cc.sfclub.polar.wrapper.Bot {
     @Override
     public String getPlatfrom() {
         return "QQ";
@@ -20,16 +18,16 @@ public class Bot implements cc.sfclub.polar.wrapper.Bot {
 
     @Override
     public long sendMessage(long gid, String message) {
-        CGroupMessage msga=new CGroupMessage();
-        ArrayList<MessageChain> msg=new ArrayList<>();
-        MessageChain c=new MessageChain();
+        CGroupMessage msga = new CGroupMessage();
+        ArrayList<MessageChain> msg = new ArrayList<>();
+        MessageChain c = new MessageChain();
         c.setType(MessageType.Plain);
         c.setText(message);
         msg.add(c);
         msga.setMessageChain(msg);
         msga.setTarget((int) gid);
         msga.setSessionKey(Main.getSession());
-        return new sendGroupMsg().send(Main.getSession(),gid,msga);
+        return new sendGroupMsg().send(Main.getSession(), msga);
     }
 
     @Override
@@ -95,7 +93,7 @@ public class Bot implements cc.sfclub.polar.wrapper.Bot {
                             break;
                     }
                 }
-            }else{
+            } else {
                 mc.setType(MessageType.Plain);
                 mc.setText(s1);
             }
@@ -103,55 +101,10 @@ public class Bot implements cc.sfclub.polar.wrapper.Bot {
         }
         msg.setMessageChain(msgs);
         msg.setTarget(textMessage.getGroupID());
-        return new sendGroupMsg().send(Main.getSession(),textMessage.getGroupID(),msg);
+        return new sendGroupMsg().send(Main.getSession(), msg);
     }
 
-    @Override
-    public long sendMessage(TextMessage textMessage, String[] strings) {
-        StringBuilder str = new StringBuilder();
-        for (String string : strings) {
-            str.append(string).append("\n");
-        }
-        return sendMessage(textMessage, str.toString());
-    }
-
-    @Override
-    public Byte[] getImage(String s) {
-        return new Byte[0];
-    }
-
-    public static String[] spilt(String str)
-    {
-        char[] ch = str.toCharArray();
-        List<String> list = new LinkedList<>();
-        StringBuilder builder = new StringBuilder();
-        for (int i=0; i<ch.length; i++)
-        {
-            char c = ch[i];
-            area_1:if (c == '[')
-            {
-                if (i > 0 && ch[i-1] == '\\') break area_1;
-                if (builder.length() > 0) list.add(builder.toString());
-                builder = new StringBuilder();
-                builder.append(c);
-                continue;
-            }
-            else if (c == ']')
-            {
-                if (i > 0 && ch[i-1] == '\\') break area_1;
-                builder.append(c);
-                list.add(builder.toString());
-                builder = new StringBuilder();
-                continue;
-            }
-            builder.append(c);
-        }
-        if(builder.length() > 0) list.add(builder.toString());
-        String[] strs = new String[list.size()];
-        for (int i = 0; i < strs.length; i++)
-        {
-            strs[i] = list.get(i);
-        }
-        return strs;
+    public String[] spilt(String s) {
+        return CatCode.spilt(s);
     }
 }

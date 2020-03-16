@@ -5,7 +5,6 @@ import cc.sfclub.polar.events.messages.TextMessage;
 import cc.sfclub.polar.mirai.packet.message.MessageChain;
 import cc.sfclub.polar.mirai.packet.message.MessageType;
 import cc.sfclub.polar.mirai.packet.message.server.GroupMessage;
-import com.google.gson.Gson;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -38,18 +37,17 @@ public class WSSListener extends WebSocketListener {
     public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
         GroupMessage gm=Main.getGson().fromJson(text,GroupMessage.class);
         StringBuilder fin=new StringBuilder();
-        gm.messageChain.forEach(c->{
-            if(c.getType()!= MessageType.Source){
+        gm.messageChain.forEach(c -> {
+            if (c.getType() != MessageType.Source) {
                 fin.append(ChainToText(c));
             }
         });
-        Core.getMessage().post(new TextMessage("QQ",gm.messageChain.get(0).id,gm.sender.id ,fin.toString(),gm.sender.group.id));
+        Core.getInstance().getMessage().post(new TextMessage("QQ", gm.messageChain.get(0).id, gm.sender.id, fin.toString(), gm.sender.group.id));
         if(Main.getConf().displayMessage){
             Core.getLogger().info("[QQ][Group]{} ~ {}({}): {}",gm.sender.group,gm.sender.memberName,gm.sender.id,fin.toString());
         }
     }
     public String ChainToText(MessageChain mch){
-        Gson gson=new Gson();
         StringBuilder str=new StringBuilder();
         switch(mch.getType()){
             case Quote:
