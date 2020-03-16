@@ -22,6 +22,8 @@ jobs:
         java-version: 1.8
     - name: git Actions
       uses: srt32/git-actions@v0.0.3
+    - name: Preparing Libs directory
+      run: mkdir libs
     - name: Download PolarCore Releases.
       uses: Legion2/download-release-action@v2.1.0
       with:
