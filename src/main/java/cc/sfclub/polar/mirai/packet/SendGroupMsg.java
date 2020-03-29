@@ -26,7 +26,7 @@ public class SendGroupMsg extends Packet {
         String raw = super.send();
         if (raw == null) return 0;
         Status stat = Main.getGson().fromJson(raw, Status.class);
-        if (stat.messageId == 1) {
+        if (stat.messageId == 3 || stat.messageId == 4) {
             Core.getLogger().info("[QQ] AuthKey invalid! trying to re-connect..");
             Main.load(Main.getConf().authKey);
         }
