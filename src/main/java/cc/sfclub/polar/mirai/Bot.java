@@ -1,10 +1,10 @@
 package cc.sfclub.polar.mirai;
 
 import cc.sfclub.polar.events.messages.TextMessage;
+import cc.sfclub.polar.mirai.packet.SendGroupMsg;
 import cc.sfclub.polar.mirai.packet.message.MessageChain;
 import cc.sfclub.polar.mirai.packet.message.MessageType;
 import cc.sfclub.polar.mirai.packet.message.client.CGroupMessage;
-import cc.sfclub.polar.mirai.packet.sendGroupMsg;
 import cc.sfclub.polar.utils.CatCode;
 import org.nutz.repo.Base64;
 
@@ -27,7 +27,7 @@ public class Bot extends cc.sfclub.polar.wrapper.Bot {
         msga.setMessageChain(msg);
         msga.setTarget((int) gid);
         msga.setSessionKey(Main.getSession());
-        return new sendGroupMsg().send(Main.getSession(), msga);
+        return new SendGroupMsg().send(Main.getSession(), msga);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class Bot extends cc.sfclub.polar.wrapper.Bot {
         }
         msg.setMessageChain(msgs);
         msg.setTarget(textMessage.getGroupID());
-        return new sendGroupMsg().send(Main.getSession(), msg);
+        return new SendGroupMsg().send(Main.getSession(), msg);
     }
 
     public String[] spilt(String s) {

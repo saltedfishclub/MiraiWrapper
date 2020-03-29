@@ -1,5 +1,6 @@
 package cc.sfclub.polar.mirai.packet;
 
+import cc.sfclub.polar.Core;
 import cc.sfclub.polar.mirai.Main;
 import cc.sfclub.polar.mirai.packet.message.client.CGroupMessage;
 import cc.sfclub.polar.mirai.packet.response.Status;
@@ -7,9 +8,10 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-public class sendGroupMsg extends Packet{
+public class SendGroupMsg extends Packet {
     String sessionKey;
     CGroupMessage msg;
+
     @Override
     public Request build() {
         return new Request.Builder()
@@ -24,8 +26,13 @@ public class sendGroupMsg extends Packet{
         String raw = super.send();
         if (raw == null) return 0;
         Status stat = Main.getGson().fromJson(raw, Status.class);
+        if (stat.messageId == 1) {
+            Core.getLogger().info("[QQ] AuthKey invalid! trying to re-connect..");
+            Main.load(Main.getConf().authKey);
+        }
         return stat.messageId;
     }
+
 
     @Override
     public String buildRequestBody() {
