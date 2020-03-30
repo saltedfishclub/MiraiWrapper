@@ -80,12 +80,9 @@ public class Main extends JavaPlugin{
         if (!loadConfig()) {
             return;
         }
-        if (load(conf.authKey)) {
-            Core.getInstance().getCommandManager().register(new Mirai());
-        }
         tokenKeeper = new Timer();
         tokenKeeper.schedule(new TokenKeeper(), 0, 900 * 1000);
-
+        Core.getInstance().getCommandManager().register(new Mirai());
     }
 
     @Override
