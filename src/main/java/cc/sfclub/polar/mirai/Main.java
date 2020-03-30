@@ -11,6 +11,7 @@ import okhttp3.WebSocket;
 import org.mve.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.Timer;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -30,12 +31,37 @@ public class Main extends JavaPlugin{
     @Getter
     private static String Session;
     private static WebSocket ws;
+    private Timer tokenKeeper;
+
+    public static boolean load(String authkey) {
+        if (Session != null) {
+            new Release(getSession()).send();
+        }
+        String session = new Authorize(authkey).send();
+        if (session == null) {
+            Core.getLogger().error("Auth Failed.(Null Response OR Wrong AuthKey)");
+            return false;
+        }
+        Type t = new Verify().send(session);
+        if (t != Type.NORMAL) {
+            Core.getLogger().error(t.name());
+            return false;
+        }
+        new ModConfig(session).send(); //Modify the server config for websocket support
+        Session = session;
+        if (ws != null) {
+            ws.close(1000, "onDisable");
+        }
+        connect();
+        return true;
+    }
+
     @Override
     public void onEnable() {
         Core.getInstance().addBot(bot);
         config = new File(this.getDataFolder().getAbsolutePath() + "/mirai.json");
-        if(!config.exists()){
-            Config a=new Config();
+        if (!config.exists()) {
+            Config a = new Config();
             try {
                 byte[] bWrite = Gson.toJson(a).getBytes();
                 OutputStream os = new FileOutputStream(config);
@@ -47,19 +73,24 @@ public class Main extends JavaPlugin{
                 e.printStackTrace();
                 return;
             }
-            conf=a;
+            conf = a;
             Core.getLogger().warn("Please Set the AuthKEY");
             return;
         }
-        if(!loadConfig()){
+        if (!loadConfig()) {
             return;
         }
-        if(load(conf.authKey)){
+        if (load(conf.authKey)) {
             Core.getInstance().getCommandManager().register(new Mirai());
         }
+        tokenKeeper = new Timer();
+        tokenKeeper.schedule(new TokenKeeper(), 0, 900 * 1000);
+
     }
+
     @Override
     public void onDisable(){
+        tokenKeeper.cancel();
         if (Session != null) {
             new Release(getSession()).send();
         }
@@ -67,30 +98,7 @@ public class Main extends JavaPlugin{
             ws.close(1000, "onDisable");
         }
     }
-    public static boolean load(String authkey){
-        if(Session!=null){
-            new Release(getSession()).send();
-        }
-        String session = new Authorize(authkey).send();
-        if(session==null){
-            Core.getLogger().error("Auth Failed.(Null Response OR Wrong AuthKey)");
-            return false;
-        }
-        Type t=new Verify().send(session);
-        if(t != Type.NORMAL){
-            Core.getLogger().error(t.name());
-            return false;
-        }
-        new ModConfig(session).send(); //Modify the server config for websocket support
-        Session=session;
-        if(ws!=null){
-            ws.close(1000,"onDisable");
-        }
-        connect();
-        return true;
-    }
     private static void connect() {
-
         Request request = new Request.Builder()
                 .url(conf.getAddress().replaceAll("http","ws").concat("message?sessionKey=").concat(getSession()))
                 .addHeader("Sec-Websocket-Key", UUID.randomUUID().toString())
