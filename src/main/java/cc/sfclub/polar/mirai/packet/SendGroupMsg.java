@@ -2,7 +2,7 @@ package cc.sfclub.polar.mirai.packet;
 
 import cc.sfclub.polar.Core;
 import cc.sfclub.polar.mirai.Main;
-import cc.sfclub.polar.mirai.packet.message.client.CGroupMessage;
+import cc.sfclub.polar.mirai.packet.message.client.CGroupPlain;
 import cc.sfclub.polar.mirai.packet.response.Status;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -10,7 +10,7 @@ import okhttp3.RequestBody;
 
 public class SendGroupMsg extends Packet {
     String sessionKey;
-    CGroupMessage msg;
+    CGroupPlain msg;
 
     @Override
     public Request build() {
@@ -20,15 +20,14 @@ public class SendGroupMsg extends Packet {
                 .build();
     }
 
-    public long send(String sessionKey, CGroupMessage msg) {
+    public long send(String sessionKey, CGroupPlain msg) {
         this.sessionKey = sessionKey;
         this.msg = msg;
         String raw = super.send();
         if (raw == null) return 0;
         Status stat = Main.getGson().fromJson(raw, Status.class);
         if (stat.messageId == 3 || stat.messageId == 4) {
-            Core.getLogger().info("[QQ] AuthKey invalid! trying to re-connect..");
-            Main.load(Main.getConf().authKey);
+            Core.getLogger().info("[QQ] AuthKey invalid! Failed to send message.");
         }
         return stat.messageId;
     }

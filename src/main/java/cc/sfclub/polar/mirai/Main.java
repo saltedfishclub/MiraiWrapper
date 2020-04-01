@@ -10,7 +10,7 @@ import okhttp3.Request;
 import okhttp3.WebSocket;
 import org.mve.plugin.java.JavaPlugin;
 
-import java.io.*;
+import java.io.File;
 import java.util.Timer;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -25,15 +25,14 @@ public class Main extends JavaPlugin{
             .build();
     @Getter
     private static Gson Gson = new Gson();
-    private static File config;
     @Getter
     private static Config conf;
     @Getter
     private static String Session;
-    private static WebSocket ws;
+    private WebSocket ws;
     private Timer tokenKeeper;
 
-    public static boolean load(String authkey) {
+    public boolean load(String authkey) {
         if (Session != null) {
             new Release(getSession()).send();
         }
@@ -59,34 +58,28 @@ public class Main extends JavaPlugin{
     @Override
     public void onEnable() {
         Core.getInstance().addBot(bot);
-        config = new File(this.getDataFolder().getAbsolutePath() + "/mirai.json");
+        File config = new File(this.getDataFolder().getAbsolutePath() + "/config.json");
         if (!config.exists()) {
-            Config a = new Config();
-            try {
-                byte[] bWrite = Gson.toJson(a).getBytes();
-                OutputStream os = new FileOutputStream(config);
-                for (byte b : bWrite) {
-                    os.write(b);
-                }
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-            conf = a;
+            Config a = new Config(this);
+            a.saveConfig();
             Core.getLogger().warn("Please Set the AuthKEY");
             return;
         }
-        if (!loadConfig()) {
+        conf = (Config) new Config(this).reloadConfig();
+        if (conf.getAuthKey().isEmpty()) {
+            Core.getLogger().warn("Set the authkey please.");
             return;
         }
+        if (tokenKeeper != null) {
+            tokenKeeper.cancel();
+        }
         tokenKeeper = new Timer();
-        tokenKeeper.schedule(new TokenKeeper(), 0, 900 * 1000);
+        tokenKeeper.schedule(new TokenKeeper(this), 0, 900 * 1000);
         Core.getInstance().getCommandManager().register(new Mirai());
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         tokenKeeper.cancel();
         if (Session != null) {
             new Release(getSession()).send();
@@ -95,31 +88,13 @@ public class Main extends JavaPlugin{
             ws.close(1000, "onDisable");
         }
     }
-    private static void connect() {
+
+    private void connect() {
         Request request = new Request.Builder()
-                .url(conf.getAddress().replaceAll("http","ws").concat("message?sessionKey=").concat(getSession()))
+                .url(conf.getAddress().replaceAll("http", "ws").concat("message?sessionKey=").concat(getSession()))
                 .addHeader("Sec-Websocket-Key", UUID.randomUUID().toString())
                 .build();
-        Core.getLogger().info("[QQ] Connecting to {}",conf.getAddress().replaceAll("http","ws"));
-        ws=httpClient.newWebSocket(request, new WSSListener());
-
-    }
-    public static boolean loadConfig(){
-        try {
-            InputStream f = new FileInputStream(config);
-            int size = f.available();
-            StringBuilder confText = new StringBuilder();
-            for (int i = 0; i < size; i++) {
-                confText.append((char) f.read());
-            }
-            conf = Gson.fromJson(confText.toString(), Config.class);
-            if(conf.authKey.isEmpty()){
-                Core.getLogger().error("Please type the AUTHKEY");
-                return false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
+        Core.getLogger().info("[QQ] Connecting to {}", conf.getAddress().replaceAll("http", "ws"));
+        ws = httpClient.newWebSocket(request, new WSSListener());
     }
 }

@@ -1,11 +1,20 @@
 package cc.sfclub.polar.mirai;
 
-import lombok.Data;
+import lombok.Getter;
+import org.mve.plugin.java.JavaPlugin;
+import org.mve.plugin.java.PluginConfig;
 
-@Data
-public class Config {
-    public String authKey="awa";
-    public String Address="http://localhost:8080/";
+public class Config extends PluginConfig {
+    @Getter
+    public String authKey = "awa";
+    @Getter
+    public String Address = "http://localhost:8080/";
+    @Getter
     public long QQ;
-    public boolean displayMessage=true;
+    @Getter
+    public boolean displayMessage = true;
+
+    public Config(JavaPlugin p) {
+        super(p);
+    }
 }

@@ -10,6 +10,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.nutz.repo.Base64;
 
 public class WSSListener extends WebSocketListener {
 
@@ -80,7 +81,7 @@ public class WSSListener extends WebSocketListener {
                 break;
             case Image:
                 str.append("[Image:")
-                        .append(mch.imageUrl)
+                        .append(Base64.URLSafe.encode(mch.imageUrl))
                         .append("]");
                 break;
             case Xml:
