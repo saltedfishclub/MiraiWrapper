@@ -11,7 +11,6 @@ import okhttp3.WebSocket;
 import org.mve.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.Timer;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +29,6 @@ public class Main extends JavaPlugin{
     @Getter
     private static String Session;
     private WebSocket ws;
-    private Timer tokenKeeper;
 
     public boolean load(String authkey) {
         if (Session != null) {
@@ -70,17 +68,12 @@ public class Main extends JavaPlugin{
             Core.getLogger().warn("Set the authkey please.");
             return;
         }
-        if (tokenKeeper != null) {
-            tokenKeeper.cancel();
-        }
-        tokenKeeper = new Timer();
-        tokenKeeper.schedule(new TokenKeeper(this), 0, 900 * 1000);
+        load(Main.getConf().authKey);
         Core.getInstance().getCommandManager().register(new Mirai());
     }
 
     @Override
     public void onDisable() {
-        tokenKeeper.cancel();
         if (Session != null) {
             new Release(getSession()).send();
         }
