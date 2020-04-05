@@ -1,7 +1,6 @@
 package cc.sfclub.polar.mirai;
 
 import cc.sfclub.polar.Core;
-import cc.sfclub.polar.mirai.commands.Mirai;
 import cc.sfclub.polar.mirai.packet.*;
 import com.google.gson.Gson;
 import lombok.Getter;
@@ -69,7 +68,6 @@ public class Main extends JavaPlugin{
             return;
         }
         load(Main.getConf().authKey);
-        Core.getInstance().getCommandManager().register(new Mirai());
     }
 
     @Override
