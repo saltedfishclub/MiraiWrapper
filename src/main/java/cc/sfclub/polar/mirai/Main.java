@@ -86,6 +86,6 @@ public class Main extends JavaPlugin{
                 .addHeader("Sec-Websocket-Key", UUID.randomUUID().toString())
                 .build();
         Core.getLogger().info("[QQ] Connecting to {}", conf.getAddress().replaceAll("http", "ws"));
-        ws = httpClient.newWebSocket(request, new WSSListener());
+        ws = httpClient.newWebSocket(request, new WSSListener(this));
     }
 }

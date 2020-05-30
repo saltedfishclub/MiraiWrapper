@@ -5,6 +5,7 @@ import cc.sfclub.polar.events.messages.TextMessage;
 import cc.sfclub.polar.mirai.packet.message.MessageChain;
 import cc.sfclub.polar.mirai.packet.message.MessageType;
 import cc.sfclub.polar.mirai.packet.message.server.GroupMessage;
+import lombok.SneakyThrows;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -13,20 +14,25 @@ import org.jetbrains.annotations.Nullable;
 import org.nutz.repo.Base64;
 
 public class WSSListener extends WebSocketListener {
+    Main main;
 
-    public WSSListener() {
+    public WSSListener(Main main) {
         super();
+        this.main = main;
     }
+
     @Override
     public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-        if(code!=1000){
+        if (code != 1000) {
             Core.getLogger().info("[QQ] WSConnection Closing!! Code:{},Reason:{}", code, reason);
         }
     }
 
+    @SneakyThrows
     @Override
     public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-        Core.getLogger().error("[QQ] Failed to establish connection.Exception:{}", t.getMessage());
+        Core.getLogger().error("[QQ] Failed to establish connection.Exception:{},Resp: {}: {}", t.getMessage(), response.code(), response.body().string());
+        main.load(Main.getConf().authKey);
     }
 
     @Override
